@@ -13,11 +13,20 @@ const uploadOnCloudinary = async (localFilePath) => {
         const response = await cloudinary.uploader.upload(localFilePath, {
             resource_type: "auto"
         }) //File has been uploaded successfully
-
-        fs.unlink(localFilePath)
+        
+        fs.unlink(localFilePath,(err) => {
+            if(err) {
+                console.log("Error deleting file white unlink after uploading : ",err);
+            }
+        })
         return response;
     } catch(error) {
-        fs.unlink(localFilePath) //remove the locally saved temp file as the upload got failed
+        fs.unlink(localFilePath,(err) => {
+            if(err) {
+                console.log("Error uploading file on cloudinary : ",err);
+            }
+        })
+        //remove the locally saved temp file as the upload got failed
         return null;
     }
 }
